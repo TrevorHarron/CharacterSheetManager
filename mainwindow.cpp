@@ -61,7 +61,6 @@ MainWindow::MainWindow(QWidget *parent) :
     makeWindow(tabs, QString::number(cTab), cTab);
     connect(tabs,SIGNAL(currentChanged(int)),this,SLOT(tabChange(int)));
 
-    tabs->setMovable(true);
     tabs->setTabsClosable(true);
     connect(tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(removeTab(int)));
 
@@ -130,18 +129,19 @@ void MainWindow::addStatFields(QString key, QString value){
     if(!info->lineEdits->contains(key)){
 
         QHBoxLayout *layout = new QHBoxLayout();
+        layout->setAlignment(Qt::AlignJustify);
         info->layout->addLayout(layout);
-
-        QLabel *label = new QLabel(key);
-        label->setAlignment(Qt::AlignLeft);
-        label->setMinimumWidth(80);
-        layout->addWidget(label);
 
         QLineEdit *lineEdit = new QLineEdit(value);
         lineEdit->setAlignment(Qt::AlignRight);
         lineEdit->setAccessibleName(key);
         lineEdit->setMaximumWidth(64);
         layout->addWidget(lineEdit);
+
+        QLabel *label = new QLabel(key);
+        label->setAlignment(Qt::AlignLeft);
+        label->setMinimumWidth(80);
+        layout->addWidget(label);
 
         info->linesLabels->push_back(qMakePair(lineEdit,label));
         info->lineEdits->insert(key,lineEdit);
@@ -360,7 +360,12 @@ void MainWindow::load(){
 
         skills->removeItem(skills->findText(skillName->text()));
         delete xmlReader;
-        tabSaves->value(cTab, false);
+
+        redoComboBoxes();
+        clearUndoStack(cTab);
+        undoStacks->insert(cTab,new QLinkedList<CharacterMemento>());
+        tabSaves->insert(cTab, false);
+
         file.close();
     }
 }
@@ -416,9 +421,6 @@ void MainWindow::readCharacter(QXmlStreamReader* xmlReader){
         if(xmlReader->hasError())
             QMessageBox::warning(this, "QXMLStreamError", xmlReader->errorString());
     }
-    redoComboBoxes();
-    clearUndoStack(cTab);
-    undoStacks->insert(cTab,new QLinkedList<CharacterMemento>());
 }
 
 void MainWindow::readFeats(QXmlStreamReader *xmlReader){
@@ -728,6 +730,9 @@ void MainWindow::redoComboBoxes(){
     skills->clear();
     skills->addItems(info->character->getSkills()->keys());
     skills->addItem("None");
+
+    stats->clear();
+    stats->addItems(info->character->getStats()->keys());
 
     tabs->setTabText(cTab,info->character->getValue("name"));
 }
