@@ -49,6 +49,14 @@ QHash<QString,int>* Character::getSkills(){
     return skills;
 }
 
+QString Character::getFeats(){
+    return feats;
+}
+
+void Character::setFeats(QString _feats){
+    feats = _feats;
+}
+
 QString Character::getSystem(){
     return system;
 }
@@ -76,14 +84,15 @@ QVector<QString>* Character::getStatVector(){
 //Memento Creation does not save the system for now
 CharacterMemento Character::createMemento(){
     QHash<QString,QString> state = *this->toHash();
-    return *(new CharacterMemento(state));
+    return *(new CharacterMemento(state, feats));
 }
 
 //Attribute initiallization
 void Character::initAttributes(){
 
-    QVector<QString>::Iterator attrIterator;
+    feats = "";
 
+    QVector<QString>::Iterator attrIterator;
     for(attrIterator = ID_NAMES.begin(); attrIterator != ID_NAMES.end(); ++attrIterator){
         this->attributes[*attrIterator] = "0";
         allStatNames.push_back(*attrIterator);

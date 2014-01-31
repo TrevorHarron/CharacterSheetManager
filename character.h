@@ -25,6 +25,9 @@ public:
     QString getValue(QString key);
     void removeValue(QString key);
 
+    QString getFeats();
+    void setFeats(QString _feats);
+
     QString getSystem();
 
     bool containsValue(QString key);
@@ -39,6 +42,7 @@ public:
 
 protected:
     QString system;
+    QString feats;
     Die *die;
     QVector<QString> ID_NAMES;
     QVector<QString> BASE_STAT_NAMES;

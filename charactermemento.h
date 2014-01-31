@@ -7,10 +7,12 @@
 class CharacterMemento
 {
     QHash<QString,QString> characterState;
+    QString feats;
 public:
-    CharacterMemento(QHash<QString, QString> _characterState);
+    CharacterMemento(QHash<QString, QString> _characterState, QString _feats);
     ~CharacterMemento();
     QHash<QString,QString> getCharacterState();
+    QString getCharacterFeats();
 };
 
 #endif // CHARACTERMEMENTO_H
