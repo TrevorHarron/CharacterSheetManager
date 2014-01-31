@@ -135,12 +135,14 @@ void MainWindow::addStatFields(QString key, QString value){
         QLineEdit *lineEdit = new QLineEdit(value);
         lineEdit->setAlignment(Qt::AlignRight);
         lineEdit->setAccessibleName(key);
-        lineEdit->setMaximumWidth(64);
+        lineEdit->setMaximumWidth(70);
+        lineEdit->setMinimumWidth(64);
         layout->addWidget(lineEdit);
 
         QLabel *label = new QLabel(key);
         label->setAlignment(Qt::AlignLeft);
-        label->setMinimumWidth(80);
+        label->setMinimumWidth(128);
+        label->setMaximumWidth(128);
         layout->addWidget(label);
 
         info->linesLabels->push_back(qMakePair(lineEdit,label));
