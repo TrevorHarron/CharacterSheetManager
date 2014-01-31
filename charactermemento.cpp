@@ -11,6 +11,10 @@ QString CharacterMemento::getCharacterFeats(){
     return feats;
 }
 
+bool CharacterMemento::operator==(CharacterMemento other){
+    return characterState == other.getCharacterState() &&
+            feats == other.getCharacterFeats();
+}
 
 CharacterMemento::~CharacterMemento()
 {

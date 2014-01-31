@@ -13,6 +13,7 @@ public:
     ~CharacterMemento();
     QHash<QString,QString> getCharacterState();
     QString getCharacterFeats();
+    bool operator ==(CharacterMemento other);
 };
 
 #endif // CHARACTERMEMENTO_H

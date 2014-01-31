@@ -422,7 +422,9 @@ void MainWindow::readCharacter(QXmlStreamReader* xmlReader){
 }
 
 void MainWindow::readFeats(QXmlStreamReader *xmlReader){
-    feats->setText(xmlReader->attributes().value("value").toString());
+    QString strFeats = xmlReader->attributes().value("value").toString();
+    tabInfo->value(cTab)->character->setFeats(strFeats);
+    feats->setText(tabInfo->value(cTab)->character->getFeats());
 }
 
 //Clear the current tab and set everything to 0
@@ -488,6 +490,9 @@ void MainWindow::undo(){
         cleanLayout();
         makeStatFields();
         redoComboBoxes();
+        cCharacter->setFeats(memento.getCharacterFeats());
+        feats->setText(cCharacter->getFeats());
+
 
         memento.~CharacterMemento();
         undoStacks->value(cTab)->pop_back();
@@ -678,6 +683,8 @@ void MainWindow::textChanged(QString value){
 }
 
 void MainWindow::textChanged(){
+    updateUndoStack();
+    tabInfo->value(cTab)->character->setFeats(feats->toPlainText());
     tabSaves->insert(cTab, true);
 }
 
@@ -687,6 +694,7 @@ void MainWindow::textChanged(){
 void MainWindow::updateUndoStack(){
     Character *cCharacter = tabInfo->value(cTab)->character;
     CharacterMemento memento = cCharacter->createMemento();
+    if (!undoStacks->value(cTab)->isEmpty() && memento == undoStacks->value(cTab)->back()) return;
     if(undoStacks->value(cTab)->size() >= 50)
         undoStacks->value(cTab)->pop_front(); //prevent infinite growth
     undoStacks->value(cTab)->push_back(memento);
